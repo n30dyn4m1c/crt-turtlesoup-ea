@@ -1,7 +1,7 @@
 //+------------------------------------------------------------------+
-//|                                                        CRTTS_H4.mq5 |
+//|                                                     CRTTS_H4.mq5 |
 //|                                                              N30 |
-//|                               https://www.x.com/n30dyn4m1c |
+//|                                     https://www.x.com/n30dyn4m1c |
 //+------------------------------------------------------------------+
 #property copyright "Neo Malesa"
 #property link      "https://www.x.com/n30dyn4m1c"
