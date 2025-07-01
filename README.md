@@ -32,6 +32,3 @@ Each EA sends alerts only (no auto-trading).
 Created by **Neo Malesa**  
 [X Profile](https://www.x.com/n30dyn4m1c)
 
----
-
-Let me know if you'd like to include screenshots or link this with your TikTok or GitHub Pages.
