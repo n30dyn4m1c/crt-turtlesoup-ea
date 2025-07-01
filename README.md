@@ -1,15 +1,37 @@
-# CRT_TS_EA
-Expert Advisors for MetaTrader 5 for Turtlesoups
+# Turtle Soup Detection EAs for MT5
 
-## CRTTS.mq5 – H4 Turtle Soup Notifier EA
+This repository contains a group of Expert Advisors (EAs) for MetaTrader 5 that detect high-quality **Turtle Soup** reversal setups across multiple timeframes—H4, Daily, Weekly, and Monthly. Each EA scans over 60 instruments including forex pairs, indices, commodities, and crypto.
 
-This MetaTrader 5 Expert Advisor scans over 60 instruments on the H4 timeframe to detect valid **Turtle Soup** patterns—false breakouts followed by strong reversals. It focuses on identifying setups with **long wicks**, ensuring high-quality signals.
+## What is Turtle Soup?
 
-### Features
-- Monitors major/minor Forex pairs, indices, commodities, and crypto
-- Detects both bullish and bearish Turtle Soup setups
-- Requires wick length to exceed 2× candle body for valid alerts
-- Sends alerts (no trades executed)
-- Complements weekly and monthly timeframe tools in this repository
+Turtle Soup is a reversal strategy based on false breakouts. These EAs detect such setups when:
+- A candle breaks the previous high/low and then closes back inside
+- The wick is more than 2× the body, ensuring strong rejection
 
-**Ideal for swing traders seeking multi-asset reversal setups.**
+## Included Files
+- `CRTTS.mq5` – H4 timeframe
+- `CRTTS_Daily.mq5` – Daily (D1) timeframe
+- `CRTTS_Weekly.mq5` – Weekly (W1) timeframe
+- `CRTTS_Monthly.mq5` – Monthly (MN1) timeframe
+
+Each EA sends alerts only (no auto-trading).
+
+## How to Use in MT5
+
+1. Open **MetaTrader 5**
+2. Press `F4` to open **MetaEditor**
+3. Copy any `.mq5` file into the `MQL5/Experts` folder
+4. In MetaEditor, right-click the file and select **Compile**
+5. Return to MT5
+6. Open the **Navigator** panel (`Ctrl+N`)
+7. Drag the compiled EA onto any chart
+8. Enable **Algo Trading** and ensure chart is open for alerts to trigger
+
+## Author
+
+Created by **Neo Malesa**  
+[X Profile](https://www.x.com/n30dyn4m1c)
+
+---
+
+Let me know if you'd like to include screenshots or link this with your TikTok or GitHub Pages.
