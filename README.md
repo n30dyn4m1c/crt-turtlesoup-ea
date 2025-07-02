@@ -17,6 +17,13 @@ Turtle Soup is a reversal strategy based on false breakouts. These EAs detect su
 
 All EAs send alerts only and do not place trades.
 
+## When to Run
+- **M15**: Can run continuously, best checked throughout sessions
+- **H4**: Run at **New York 1 AM, 5 AM, 9 AM or PM**, shortly after each H4 candle opens
+- **Daily**: Run at the **start of the trading day**
+- **Weekly**: Run on **Monday**, after weekly open
+- **Monthly**: Run at the **beginning of each month**
+
 ## How to Use in MT5
 
 1. Open **MetaTrader 5**
