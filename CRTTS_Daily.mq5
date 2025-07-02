@@ -22,15 +22,15 @@ string symbols[] = {
     "NZDCAD", "NZDCHF", "NZDJPY",
 
     // Indices, commodities, and crypto
-    "AUS200Cash", "BRENTCash", "CA60Cash", "EU50Cash", "FRA40Cash",
-    "GER40Cash", "GOLD", "HK50Cash", "IT40Cash", "JP225Cash",
+    "AUS200Cash", "BRENTCash", "CA60Cash", "China50Cash", "ChinaHCash","EU50Cash", "FRA40Cash",
+    "GER40Cash", "HK50Cash", "IT40Cash", "JP225Cash",
     "NETH25Cash", "NGASCash", "OILCash", "SA40Cash", "SILVER",
     "SPAIN35Cash", "SWI20Cash", "Sing30Cash", "UK100Cash",
-    "US100Cash", "US2000Cash", "US30Cash", "US500Cash",
+    "US100Cash", "US2000Cash", "US30Cash", "US500Cash", "GerMid50Cash","GerTech30Cash","TaiwanCash",
 
     "BTCEUR", "BTCGBP", "BTCUSD", "ETHEUR", "ETHGBP", "ETHUSD",
 
-    "XAUEUR", "XPDUSD", "XPTUSD"
+    "GOLD", "XAUUSD", "SILVER", "XAUEUR", "XPDUSD", "XPTUSD"
 };
 
 int OnInit() {
