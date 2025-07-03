@@ -2,27 +2,43 @@
 
 This repository contains a suite of Expert Advisors (EAs) for MetaTrader 5 that detect high-quality Turtle Soup reversal setups across multiple timeframes—M15, H4, Daily, Weekly, and Monthly. Each EA scans over 60 instruments including forex pairs, indices, commodities, and crypto.
 
+---
+
 ## What is Turtle Soup?
+
 Turtle Soup is a reversal strategy based on false breakouts. These EAs detect such setups when:
 
 - A candle breaks the previous high/low and then closes back inside
 - The wick is significantly longer than the body (strong rejection)
 
+---
+
 ## Included Files
+
 - `CRTTS_M15.mq5` – 15-minute (M15), wick must be ≥ 3× candle body
-- `CRTTS.mq5` – 4-hour (H4), wick must be ≥ 2× candle body. Also provides trade level alerts: Entry, SL, TP1, TP2.
+- `CRTTS_H4.mq5` – 4-hour (H4), wick must be ≥ 2× candle body  
+  Also provides trade level alerts:
+  - **Entry**: Buy Below or Sell Above the open of the current H4 candle  
+  - **SL (Stop Loss)**: Low (bullish) or High (bearish) of the Turtle Soup candle  
+  - **TP1**: Midpoint between the high and low of the previous range candle  
+  - **TP2**: The opposite extreme of the previous range candle (High for bullish, Low for bearish)
 - `CRTTS_Daily.mq5` – Daily (D1)
 - `CRTTS_Weekly.mq5` – Weekly (W1)
 - `CRTTS_Monthly.mq5` – Monthly (MN1)
 
 All EAs send alerts only and do not place trades.
 
+---
+
 ## When to Run
-- **M15:** Can run continuously, best checked throughout sessions
-- **H4:** Run at New York 1 AM, 5 AM, 9 AM or PM, shortly after each H4 candle opens
-- **Daily:** Run at the start of the trading day
-- **Weekly:** Run on Monday, after weekly open
-- **Monthly:** Run at the beginning of each month
+
+- **M15**: Can run continuously, best checked throughout sessions
+- **H4**: Run at New York 1 AM, 5 AM, 9 AM or PM, shortly after each H4 candle opens
+- **Daily**: Run at the start of the trading day
+- **Weekly**: Run on Monday, after weekly open
+- **Monthly**: Run at the beginning of each month
+
+---
 
 ## How to Use in MT5
 1. Open MetaTrader 5
