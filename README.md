@@ -39,6 +39,18 @@ Alerts will be triggered whenever valid Turtle Soup patterns are detected.
 ## Screenshots
 ![Turtle Soup Alert](screenshot.png)
 
+## Further Improvements
+- Add timed triggers for H4 detection: check only during the first 30 minutes of each H4 candle, every 10 minutes
+- Expand Turtle Soup detection to use multi-candle range breakouts (e.g., break of last 2–5 candles)
+- Detect same-direction Turtle Soup (e.g., bullish breakout with a bullish long-wick candle)
+- Add doji candle logic to filter out weak signals
+- Add per-symbol memory to prevent repeated alerts per candle
+- Combine all timeframe logic into one EA with toggle switches
+- Introduce ATR filtering or additional candle quality filters
+- Build an on-chart dashboard for signal display
+- Optional email or push notifications for alerts
+- Add logic to place actual orders when a Turtle Soup pattern is detected, with proper SL and TP settings
+
 ## Author
 Created by **Neo Malesa**  
 [X Profile](https://www.x.com/n30dyn4m1c)
