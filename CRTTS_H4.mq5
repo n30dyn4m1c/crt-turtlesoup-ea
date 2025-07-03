@@ -5,7 +5,7 @@
 //+------------------------------------------------------------------+
 #property copyright "Neo Malesa"
 #property link      "https://www.x.com/n30dyn4m1c"
-#property version   "1.03"
+#property version   "1.04"
 
 input ENUM_TIMEFRAMES TimeFrame = PERIOD_H4;
 
@@ -46,7 +46,9 @@ void OnTick() {
     for (int i = 0; i < ArraySize(symbols); i++) {
         string symbol = symbols[i];
 
-        if (Bars(symbol, TimeFrame) < 3) continue;
+        if (Bars(symbol, TimeFrame) < 4) continue;
+
+        double o0 = iOpen(symbol, TimeFrame, 0);
 
         double o1 = iOpen(symbol, TimeFrame, 1);
         double c1 = iClose(symbol, TimeFrame, 1);
@@ -59,7 +61,10 @@ void OnTick() {
         double l2 = iLow(symbol, TimeFrame, 2);
         double mid2 = (o2 + c2) / 2.0;
 
-        double o0 = iOpen(symbol, TimeFrame, 0); // current candle open
+        double o3 = iOpen(symbol, TimeFrame, 3);
+        double c3 = iClose(symbol, TimeFrame, 3);
+        double h3 = iHigh(symbol, TimeFrame, 3);
+        double l3 = iLow(symbol, TimeFrame, 3);
 
         bool c1Bull = c1 > o1;
         bool c1Bear = c1 < o1;
@@ -69,30 +74,31 @@ void OnTick() {
         if (!c1Bull && !c1Bear) continue;
         if (!c2Bull && !c2Bear) continue;
 
-        double body1 = MathAbs(c1 - o1);
-        double lowerWick = MathMin(o1, c1) - l1;
-        double upperWick = h1 - MathMax(o1, c1);
+        double body2 = MathAbs(c2 - o2);
+        double lowerWick2 = MathMin(o2, c2) - l2;
+        double upperWick2 = h2 - MathMax(o2, c2);
 
-        bool longLowerWick = lowerWick > 2.0 * body1;
-        bool longUpperWick = upperWick > 2.0 * body1;
+        bool longLowerWick2 = lowerWick2 > 2.0 * body2;
+        bool longUpperWick2 = upperWick2 > 2.0 * body2;
 
-        if (c1Bull && c2Bear && l1 < l2 && o1 > c2 && h1 < o2 && h1 < mid2 && longLowerWick) {
-            double entry = o0; // buy below open of current candle
-            double sl = l1;
-            double tp1 = entry + (0.5 * body1);
+        // Bullish Turtle Soup
+        if (c1Bull && c2Bear && l2 < l3 && o2 > c3 && h2 < o3 && h2 < mid2 && longLowerWick2) {
+            double entry = o0;
+            double sl = l2;
+            double tp1 = (o1 + c1) / 2.0;
             double tp2 = h1;
             Alert(symbol + " H4: Bullish Turtle Soup detected.");
             Alert(symbol + " Buy Below: " + DoubleToString(entry, _Digits) + " | SL: " + DoubleToString(sl, _Digits) + " | TP1: " + DoubleToString(tp1, _Digits) + " | TP2: " + DoubleToString(tp2, _Digits));
         }
 
-        if (c1Bear && c2Bull && h1 > h2 && o1 < c2 && l1 > o2 && l1 > mid2 && longUpperWick) {
-            double entry = o0; // sell above open of current candle
-            double sl = h1;
-            double tp1 = entry - (0.5 * body1);
+        // Bearish Turtle Soup
+        if (c1Bear && c2Bull && h2 > h3 && o2 < c3 && l2 > o3 && l2 > mid2 && longUpperWick2) {
+            double entry = o0;
+            double sl = h2;
+            double tp1 = (o1 + c1) / 2.0;
             double tp2 = l1;
             Alert(symbol + " H4: Bearish Turtle Soup detected.");
             Alert(symbol + " Sell Above: " + DoubleToString(entry, _Digits) + " | SL: " + DoubleToString(sl, _Digits) + " | TP1: " + DoubleToString(tp1, _Digits) + " | TP2: " + DoubleToString(tp2, _Digits));
         }
     }
 }
-
