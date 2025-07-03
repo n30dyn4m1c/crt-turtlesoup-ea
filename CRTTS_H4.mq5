@@ -79,7 +79,7 @@ void OnTick() {
         bool longUpperWick1 = upperWick1 > 2.0 * body1;
 
         // Bullish Turtle Soup
-        if (c2Bull && c1Bear && l1 < l2 && longLowerWick1 && c1 > o2) {
+        if (c2Bear && c1Bull && l1 < l2 && c1 > c2 && longLowerWick1) {
             double entry = o0;
             string entryText = "Buy Below: " + DoubleToString(entry, _Digits);
             double sl = l1;
@@ -90,7 +90,7 @@ void OnTick() {
         }
 
         // Bearish Turtle Soup
-        if (c2Bear && c1Bull && h1 > h2 && longUpperWick1 && c1 < o2) {
+        if (c2Bull && c1Bear && h1 > h2 && c1 < c2 && longUpperWick1) {
             double entry = o0;
             string entryText = "Sell Above: " + DoubleToString(entry, _Digits);
             double sl = h1;
