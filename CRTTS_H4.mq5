@@ -40,7 +40,7 @@ int OnInit() {
 
 void OnTick() {
     static datetime lastChecked = 0;
-    if (TimeCurrent() - lastChecked < 60) return;
+    if (TimeCurrent() - lastChecked < 600) return;
     lastChecked = TimeCurrent();
 
     for (int i = 0; i < ArraySize(symbols); i++) {
@@ -51,20 +51,17 @@ void OnTick() {
 
         double o0 = iOpen(symbol, TimeFrame, 0);
 
-        double o1 = iOpen(symbol, TimeFrame, 1);
-        double c1 = iClose(symbol, TimeFrame, 1);
-        double h1 = iHigh(symbol, TimeFrame, 1);
-        double l1 = iLow(symbol, TimeFrame, 1);
-
+        // Candle1: pattern range
         double o2 = iOpen(symbol, TimeFrame, 2);
         double c2 = iClose(symbol, TimeFrame, 2);
         double h2 = iHigh(symbol, TimeFrame, 2);
         double l2 = iLow(symbol, TimeFrame, 2);
 
-        double o3 = iOpen(symbol, TimeFrame, 3);
-        double c3 = iClose(symbol, TimeFrame, 3);
-        double h3 = iHigh(symbol, TimeFrame, 3);
-        double l3 = iLow(symbol, TimeFrame, 3);
+        // Candle2: false breakout (TS candle)
+        double o1 = iOpen(symbol, TimeFrame, 1);
+        double c1 = iClose(symbol, TimeFrame, 1);
+        double h1 = iHigh(symbol, TimeFrame, 1);
+        double l1 = iLow(symbol, TimeFrame, 1);
 
         bool c1Bull = c1 > o1;
         bool c1Bear = c1 < o1;
@@ -74,31 +71,33 @@ void OnTick() {
         if (!c1Bull && !c1Bear) continue;
         if (!c2Bull && !c2Bear) continue;
 
-        double body2 = MathAbs(c2 - o2);
-        double lowerWick2 = MathMin(o2, c2) - l2;
-        double upperWick2 = h2 - MathMax(o2, c2);
+        double body1 = MathAbs(c1 - o1);
+        double lowerWick1 = MathMin(o1, c1) - l1;
+        double upperWick1 = h1 - MathMax(o1, c1);
 
-        bool longLowerWick2 = lowerWick2 > 2.0 * body2;
-        bool longUpperWick2 = upperWick2 > 2.0 * body2;
+        bool longLowerWick1 = lowerWick1 > 2.0 * body1;
+        bool longUpperWick1 = upperWick1 > 2.0 * body1;
 
         // Bullish Turtle Soup
-        if (c1Bull && c2Bear && l2 < l3 && o2 > c3 && h2 < o3 && longUpperWick2 && longLowerWick2) {
+        if (c2Bull && c1Bear && l1 < l2 && longLowerWick1 && c1 > o2) {
             double entry = o0;
-            double sl = l2;
-            double tp1 = entry + 0.5 * MathAbs(c1 - o1);
-            double tp2 = h1;
+            string entryText = "Buy Below: " + DoubleToString(entry, _Digits);
+            double sl = l1;
+            double tp1 = (l2 + h2) / 2.0;
+            double tp2 = h2;
             Alert(symbol + " H4: Bullish Turtle Soup detected.");
-            Alert(symbol + " Buy Below: " + DoubleToString(entry, _Digits) + " | SL: " + DoubleToString(sl, _Digits) + " | TP1: " + DoubleToString(tp1, _Digits) + " | TP2: " + DoubleToString(tp2, _Digits));
+            Alert(symbol + " " + entryText + " | SL: " + DoubleToString(sl, _Digits) + " | TP1: " + DoubleToString(tp1, _Digits) + " | TP2: " + DoubleToString(tp2, _Digits));
         }
 
         // Bearish Turtle Soup
-        if (c1Bear && c2Bull && h2 > h3 && o2 < c3 && l2 > o3 && longLowerWick2 && longUpperWick2) {
+        if (c2Bear && c1Bull && h1 > h2 && longUpperWick1 && c1 < o2) {
             double entry = o0;
-            double sl = h2;
-            double tp1 = entry - 0.5 * MathAbs(c1 - o1);
-            double tp2 = l1;
+            string entryText = "Sell Above: " + DoubleToString(entry, _Digits);
+            double sl = h1;
+            double tp1 = (h2 + l2) / 2.0;
+            double tp2 = l2;
             Alert(symbol + " H4: Bearish Turtle Soup detected.");
-            Alert(symbol + " Sell Above: " + DoubleToString(entry, _Digits) + " | SL: " + DoubleToString(sl, _Digits) + " | TP1: " + DoubleToString(tp1, _Digits) + " | TP2: " + DoubleToString(tp2, _Digits));
+            Alert(symbol + " " + entryText + " | SL: " + DoubleToString(sl, _Digits) + " | TP1: " + DoubleToString(tp1, _Digits) + " | TP2: " + DoubleToString(tp2, _Digits));
         }
     }
 }
