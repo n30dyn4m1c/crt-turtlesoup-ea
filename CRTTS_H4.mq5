@@ -46,7 +46,8 @@ void OnTick() {
     for (int i = 0; i < ArraySize(symbols); i++) {
         string symbol = symbols[i];
 
-        if (Bars(symbol, TimeFrame) < 4) continue;
+        // Require 3 bars for Turtle Soup pattern: Candle1, Candle2, and forming Candle3
+        if (Bars(symbol, TimeFrame) < 3) continue;
 
         double o0 = iOpen(symbol, TimeFrame, 0);
 
@@ -59,7 +60,6 @@ void OnTick() {
         double c2 = iClose(symbol, TimeFrame, 2);
         double h2 = iHigh(symbol, TimeFrame, 2);
         double l2 = iLow(symbol, TimeFrame, 2);
-        double mid2 = (o2 + c2) / 2.0;
 
         double o3 = iOpen(symbol, TimeFrame, 3);
         double c3 = iClose(symbol, TimeFrame, 3);
@@ -82,20 +82,20 @@ void OnTick() {
         bool longUpperWick2 = upperWick2 > 2.0 * body2;
 
         // Bullish Turtle Soup
-        if (c1Bull && c2Bear && l2 < l3 && o2 > c3 && h2 < o3 && h2 < mid2 && longLowerWick2) {
+        if (c1Bull && c2Bear && l2 < l3 && o2 > c3 && h2 < o3 && longUpperWick2 && longLowerWick2) {
             double entry = o0;
             double sl = l2;
-            double tp1 = (o1 + c1) / 2.0;
+            double tp1 = entry + 0.5 * MathAbs(c1 - o1);
             double tp2 = h1;
             Alert(symbol + " H4: Bullish Turtle Soup detected.");
             Alert(symbol + " Buy Below: " + DoubleToString(entry, _Digits) + " | SL: " + DoubleToString(sl, _Digits) + " | TP1: " + DoubleToString(tp1, _Digits) + " | TP2: " + DoubleToString(tp2, _Digits));
         }
 
         // Bearish Turtle Soup
-        if (c1Bear && c2Bull && h2 > h3 && o2 < c3 && l2 > o3 && l2 > mid2 && longUpperWick2) {
+        if (c1Bear && c2Bull && h2 > h3 && o2 < c3 && l2 > o3 && longLowerWick2 && longUpperWick2) {
             double entry = o0;
             double sl = h2;
-            double tp1 = (o1 + c1) / 2.0;
+            double tp1 = entry - 0.5 * MathAbs(c1 - o1);
             double tp2 = l1;
             Alert(symbol + " H4: Bearish Turtle Soup detected.");
             Alert(symbol + " Sell Above: " + DoubleToString(entry, _Digits) + " | SL: " + DoubleToString(sl, _Digits) + " | TP1: " + DoubleToString(tp1, _Digits) + " | TP2: " + DoubleToString(tp2, _Digits));
