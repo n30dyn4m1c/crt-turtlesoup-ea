@@ -1,72 +1,122 @@
-# Turtle Soup Detection EAs for MT5
+# 🐢 Turtle Soup Detection EAs for MT5
 
-This repository contains a suite of Expert Advisors (EAs) for MetaTrader 5 that detect high-quality Turtle Soup reversal setups across multiple timeframes—M15, H4, Daily, Weekly, and Monthly. Each EA scans over 60 instruments including forex pairs, indices, commodities, and crypto.
-
----
-
-## What is Turtle Soup?
-
-Turtle Soup is a reversal strategy based on false breakouts. These EAs detect such setups when:
-
-- A candle breaks the previous high/low and then closes back inside
-- The wick is significantly longer than the body (strong rejection)
+A multi-timeframe MetaTrader 5 EA suite for detecting high-probability Turtle Soup reversal setups across over 60 forex, index, commodity, and crypto instruments. Developed for price action traders who seek clean, structured, wick-based entries without indicators.
 
 ---
 
-## Included Files
+## 🧰 Tech Stack
 
-- `CRTTS_M15.mq5` – 15-minute (M15), wick must be ≥ 3× candle body
-- `CRTTS_H4.mq5` – 4-hour (H4), wick must be ≥ 2× candle body  
-  Also provides trade level alerts:
-  - **Entry**: Buy Below or Sell Above the open of the current H4 candle  
-  - **SL (Stop Loss)**: Low (bullish) or High (bearish) of the Turtle Soup candle  
-  - **TP1**: Midpoint between the high and low of the previous range candle  
-  - **TP2**: The opposite extreme of the previous range candle (High for bullish, Low for bearish)
-- `CRTTS_Daily.mq5` – Daily (D1)
-- `CRTTS_Weekly.mq5` – Weekly (W1)
-- `CRTTS_Monthly.mq5` – Monthly (MN1)
-
-All EAs send alerts only and do not place trades.
+- **Platform**: MetaTrader 5
+- **Language**: MQL5
+- **Alert System**: Terminal-based alerts (planned: push/email)
+- **Trade Logic**: Price-action, Turtle Soup reversal strategy
+- **Symbol Coverage**: 60+ FX pairs, indices, metals, crypto
+- **Timeframes**: M15, H4, D1, W1, MN1
 
 ---
 
-## When to Run
+## 🚀 Key Features
 
-- **M15**: Can run continuously, best checked throughout sessions
-- **H4**: Run at New York 1 AM, 5 AM, 9 AM or PM, shortly after each H4 candle opens
-- **Daily**: Run at the start of the trading day
-- **Weekly**: Run on Monday, after weekly open
-- **Monthly**: Run at the beginning of each month
+- ✅ Detects 3-candle Turtle Soup setups (range → false breakout → reversal)
+- ✅ Long wick validation: wick ≥ 2× body
+- ✅ Trade level alerts on H4: Entry, SL, TP1, TP2
+- ✅ Multi-asset scanning from one chart
+- ✅ Pure price-action: no indicators used
+- 🔜 Push/email/mobile alerts
+- 🔜 Auto-trading logic with risk controls
+- 🔜 On-chart dashboard for signal display
 
 ---
 
-## How to Use in MT5
-1. Open MetaTrader 5
-2. Press F4 to open MetaEditor
-3. Copy any `.mq5` file into the `MQL5/Experts` directory
-4. In MetaEditor, right-click the file and select **Compile**
-5. Return to MT5
-6. Open the Navigator panel (Ctrl+N)
-7. Drag the EA onto any chart
-8. Enable **Algo Trading** (top toolbar button)
+## 📊 Turtle Soup Logic (H4 EA)
 
-Alerts will be triggered whenever valid Turtle Soup patterns are detected.
+The H4 script follows strict 3-candle logic:
+- **Candle2**: Range candle
+- **Candle1**: False breakout candle with a long wick
+- **Candle0**: Currently forming candle (entry reference)
 
-## Screenshots
+### Trade Levels
+- **Entry**: Open of Candle0 (Buy Below / Sell Above)
+- **SL**: Wick extreme of Candle1
+- **TP1**: Midpoint of Candle2 range
+- **TP2**: Candle2 extreme (opposite direction of the setup)
+
+### Detection Conditions
+- **Bullish TS**:
+  - Candle2 is bearish
+  - Candle1 is bullish and breaks Candle2 low
+  - Candle1 closes above Candle2 close
+  - Candle1 has a long lower wick
+
+- **Bearish TS**:
+  - Candle2 is bullish
+  - Candle1 is bearish and breaks Candle2 high
+  - Candle1 closes below Candle2 close
+  - Candle1 has a long upper wick
+
+---
+
+## 🗂 Included Files
+
+| File                | Timeframe | Wick Requirement | Trade Alerts | Notes                          |
+|---------------------|-----------|------------------|---------------|--------------------------------|
+| `CRTTS_M15.mq5`     | M15       | ≥ 3× body        | No            | For high-frequency setups      |
+| `CRTTS_H4.mq5`      | H4        | ≥ 2× body        | Yes           | 3-candle logic + full alerts   |
+| `CRTTS_Daily.mq5`   | D1        | ≥ 2× body        | No            | Clean daily signal filter      |
+| `CRTTS_Weekly.mq5`  | W1        | ≥ 2× body        | No            | Long-term signal confirmation  |
+| `CRTTS_Monthly.mq5` | MN1       | ≥ 2× body        | No            | Macro-level reversals          |
+
+> All EAs are alert-only by default. No auto-trading yet.
+
+---
+
+## ⏰ When to Run
+
+- **M15**: Continuously during active sessions
+- **H4**: NY time – 1 AM, 5 AM, 9 AM or PM
+- **Daily**: At the start of the trading day
+- **Weekly**: Mondays after weekly open
+- **Monthly**: First calendar day of the month
+
+---
+
+## 🛠️ Setup Instructions
+
+1. Open MetaTrader 5  
+2. Press `F4` to open MetaEditor  
+3. Copy `.mq5` files into the `MQL5/Experts` directory  
+4. Compile your EA (`Right-click → Compile`)  
+5. Open MT5 → Navigator → Drag the EA onto any chart  
+6. Enable **Algo Trading**  
+7. Wait for alerts (pop-up) when a valid pattern is detected
+
+---
+
+## 📸 Screenshot
+
 ![Turtle Soup Alert](screenshot.png)
 
-## Further Improvements
-- Check that false breakout candle body is less than half of the range candle body
-- Add timed triggers for H4 detection: check only during the first 30 minutes of each H4 candle, every 10 minutes
-- Expand Turtle Soup detection to use multi-candle range breakouts (e.g., break of last 2–5 candles)
-- Detect same-direction Turtle Soup (e.g., bullish breakout with a bullish long-wick candle)
-- Add per-symbol memory to prevent repeated alerts per candle
-- Combine all timeframe logic into one EA with toggle switches
-- Introduce ATR filtering or additional candle quality filters
-- Build an on-chart dashboard for signal display
-- Optional email or push notifications for alerts
-- Add logic to place actual orders when a Turtle Soup pattern is detected, with proper SL and TP settings
+---
 
-## Author
-Created by **Neo Malesa**  
-[X Profile](https://www.x.com/n30dyn4m1c)
+## 🎯 Future Improvements
+
+- ⏱️ Timed trigger: H4 scans only during first 30 min of each candle
+- 🧠 Filter: Require TS body < 50% of range body
+- 📈 Expand logic to multi-candle range breaks (2–5 bars)
+- ↔️ Same-direction Turtle Soup (e.g. bullish candle + bullish wick)
+- 🚫 Prevent duplicate alerts using per-symbol memory
+- 🔀 Merge timeframes into one EA with toggle switches
+- 📊 Add dashboard with HTMX-style signal display
+- ✉️ Push/email/mobile notifications
+- 🤖 Add trading logic with SL/TP and lot sizing
+
+---
+
+## 📝 License & Acknowledgments
+
+- © 2025 **Neo Malesa** – [@n30dyn4m1c on X](https://www.x.com/n30dyn4m1c)  
+- Built with precision for traders who prefer raw price action over indicators  
+- Strategy inspired by Turtle Soup, coined by Linda Raschke, and Candle Range Theory by Romeo
+
+---
+
