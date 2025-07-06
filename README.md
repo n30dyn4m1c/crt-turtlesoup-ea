@@ -68,15 +68,6 @@ The H4 script follows strict 3-candle logic:
 
 > All EAs are alert-only by default. No auto-trading yet.
 
----
-
-## ⏰ When to Run
-
-- **M15**: Continuously during active sessions
-- **H4**: NY time – 1 AM, 5 AM, 9 AM or PM
-- **Daily**: At the start of the trading day
-- **Weekly**: Mondays after weekly open
-- **Monthly**: First calendar day of the month
 
 ---
 
@@ -92,23 +83,45 @@ The H4 script follows strict 3-candle logic:
 
 ---
 
+## ⏰ When to Run
+
+- **M15**: Continuously during active sessions
+- **H4**: NY time – 1 AM, 5 AM, 9 AM or PM
+- **Daily**: At the start of the trading day
+- **Weekly**: Mondays after weekly open
+- **Monthly**: First calendar day of the month
+
+---
+
 ## 📸 Screenshot
 
 ![Turtle Soup Alert](screenshot.png)
 
 ---
 
+🎓 Lessons Learned
+
+- 3-candle CRTs are easier to encode. Multiple candle CRT setups will need additional logic
+- Size of the range candle needs to be big
+- Backtest on demo first for at least a week
+- Filter out only high quality CRT & TS setups, ignore low quality setups
+- Consider removing instruments with large spread
+- Consider first entry above/below range candle high/low, and second entry above/below current candle open
+- Turtle soup candle should not reach more than 50% of range candle, then it is invalid
+
+---
+
 ## 🎯 Future Improvements
 
-- ⏱️ Timed trigger: H4 scans only during first 30 min of each candle
-- 🧠 Filter: Require TS body < 50% of range body
-- 📈 Expand logic to multi-candle range breaks (2–5 bars)
-- ↔️ Same-direction Turtle Soup (e.g. bullish candle + bullish wick)
-- 🚫 Prevent duplicate alerts using per-symbol memory
-- 🔀 Merge timeframes into one EA with toggle switches
-- 📊 Add dashboard with HTMX-style signal display
-- ✉️ Push/email/mobile notifications
-- 🤖 Add trading logic with SL/TP and lot sizing
+- Timed trigger: H4 scans only during first 30 min of each candle
+- Filter: Require TS body < 50% of range body
+- Expand logic to multi-candle range breaks (2–5 bars)
+- Same-direction Turtle Soup (e.g. bullish candle + bullish wick)
+- Prevent duplicate alerts using per-symbol memory
+- Merge timeframes into one EA with toggle switches
+- Add dashboard with HTMX-style signal display
+- Push/email/mobile notifications
+- Add trading logic with SL/TP and lot sizing
 
 ---
 
