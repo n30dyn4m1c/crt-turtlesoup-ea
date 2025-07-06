@@ -1,4 +1,4 @@
-# 🐢 Turtle Soup Detection EAs for MT5
+# 🐢🍲 Turtle Soup Detection EAs for MT5
 
 A multi-timeframe MetaTrader 5 EA suite for detecting high-probability Turtle Soup reversal setups across over 60 forex, index, commodity, and crypto instruments. Developed for price action traders who seek clean, structured, wick-based entries without indicators.
 
