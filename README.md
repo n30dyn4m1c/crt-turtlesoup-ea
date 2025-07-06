@@ -115,7 +115,7 @@ The H4 script follows strict 3-candle logic:
 ## 📝 License & Acknowledgments
 
 - © 2025 **Neo Malesa** – [@n30dyn4m1c on X](https://www.x.com/n30dyn4m1c)  
-- Built with precision for traders who prefer raw price action over indicators  
+- Built with 💚 for MT5 CRT traders   
 - Strategy inspired by Turtle Soup, coined by Linda Raschke, and Candle Range Theory by Romeo
 
 ---
