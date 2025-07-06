@@ -99,7 +99,7 @@ The H4 script follows strict 3-candle logic:
 
 ---
 
-🎓 Lessons Learned
+## 🎓 Lessons Learned
 
 - 3-candle CRTs are easier to encode. Multiple candle CRT setups will need additional logic
 - Size of the range candle needs to be big
