@@ -121,10 +121,10 @@ Relationship between Range Candle (RC) and Turtle Soup Candle (TSC)
 - Entry models: LTF CISD
 
 - Timeframe alignment for HTF Premium/Discount Array to LTF TS
-Monthly PD array - Daily TS
-Weekly PD array - 4H TS
-Daily PD array -  1H TS
-4H PD array - 15M TS
+- Monthly PD array - Daily TS
+- Weekly PD array - 4H TS
+- Daily PD array -  1H TS
+- 4H PD array - 15M TS
 
 ---
 
