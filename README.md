@@ -108,6 +108,23 @@ The H4 script follows strict 3-candle logic:
 - Consider removing instruments with large spread
 - Consider first entry above/below range candle high/low, and second entry above/below current candle open
 - Turtle soup candle should not reach more than 50% of range candle, then it is invalid
+- Note instruments that do not trade 24 hours, EA will not trigger if market is closed.
+- Also if loaded in a live isntrument, EA will continuously give alert for an instrument if market closed with a setup formation
+- Only valid range is a thick down-closed or thick up-closed candle
+- EA might need instrument to be opened in Market Watch, for it to scan, so open all
+
+Relationship between Range Candle (RC) and Turtle Soup Candle (TSC)
+- For RC body incl wick must be larger than TSC body incl wick, let's say 2x
+- TSC must not reach 50% and 100% CR after TS
+- Check IRL-ERL confluence when a TS is detected
+- Valid TS sweeps a high or a low
+- Entry models: LTF CISD
+
+- Timeframe alignment for HTF Premium/Discount Array to LTF TS
+Monthly PD array - Daily TS
+Weekly PD array - 4H TS
+Daily PD array -  1H TS
+4H PD array - 15M TS
 
 ---
 
