@@ -11,7 +11,7 @@ A multi-timeframe MetaTrader 5 EA suite for detecting high-probability Turtle So
 - **Alert System**: Terminal-based alerts (planned: push/email)
 - **Trade Logic**: Price-action, Turtle Soup reversal strategy
 - **Symbol Coverage**: 60+ FX pairs, indices, metals, crypto
-- **Timeframes**: M15, H4, D1, W1, MN1
+- **Timeframes**: M15, H1, H4, D1, W1, MN1
 
 ---
 
@@ -19,7 +19,7 @@ A multi-timeframe MetaTrader 5 EA suite for detecting high-probability Turtle So
 
 - ✅ Detects 3-candle Turtle Soup setups (range → false breakout → reversal)
 - ✅ Long wick validation: wick ≥ 2× body
-- ✅ Trade level alerts on H4: Entry, SL, TP1, TP2
+- ✅ Trade level alerts on H4, H1, & M15: Entry, SL, TP1, TP2
 - ✅ Multi-asset scanning from one chart
 - ✅ Pure price-action: no indicators used
 - 🔜 Push/email/mobile alerts
@@ -28,9 +28,9 @@ A multi-timeframe MetaTrader 5 EA suite for detecting high-probability Turtle So
 
 ---
 
-## 📊 Turtle Soup Logic (H4 EA)
+## 📊 Turtle Soup Logic (H4, H1, M15 EA)
 
-The H4 script follows strict 3-candle logic:
+The H4, H1, & M15 scripts follows strict 3-candle logic:
 - **Candle2**: Range candle
 - **Candle1**: False breakout candle with a long wick
 - **Candle0**: Currently forming candle (entry reference)
@@ -60,8 +60,9 @@ The H4 script follows strict 3-candle logic:
 
 | File                | Timeframe | Wick Requirement | Trade Alerts | Notes                          |
 |---------------------|-----------|------------------|---------------|--------------------------------|
-| `CRTTS_M15.mq5`     | M15       | ≥ 3× body        | No            | For high-frequency setups      |
+| `CRTTS_M15.mq5`     | M15       | ≥ 3× body        | Yes           | For high-frequency setups      |
 | `CRTTS_H4.mq5`      | H4        | ≥ 2× body        | Yes           | 3-candle logic + full alerts   |
+| `CRTTS_H1.mq5`      | H1        | ≥ 2× body        | Yes           | 3-candle logic + full alerts   |
 | `CRTTS_Daily.mq5`   | D1        | ≥ 2× body        | No            | Clean daily signal filter      |
 | `CRTTS_Weekly.mq5`  | W1        | ≥ 2× body        | No            | Long-term signal confirmation  |
 | `CRTTS_Monthly.mq5` | MN1       | ≥ 2× body        | No            | Macro-level reversals          |
@@ -87,6 +88,7 @@ The H4 script follows strict 3-candle logic:
 
 - **M15**: Continuously during active sessions
 - **H4**: NY time – 1 AM, 5 AM, 9 AM or PM
+- **H4**: At the start of every trading hour
 - **Daily**: At the start of the trading day
 - **Weekly**: Mondays after weekly open
 - **Monthly**: First calendar day of the month
