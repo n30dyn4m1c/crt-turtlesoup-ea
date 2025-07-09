@@ -11,27 +11,18 @@ input ENUM_TIMEFRAMES TimeFrame = PERIOD_H4;
 
 // List of instruments (symbols) to loop through
 string symbols[] = {
-    // Major forex pairs
-    "EURUSD", "USDJPY", //"GBPUSD", "USDCHF", "AUDUSD", "USDCAD", "NZDUSD",
-
-    // Minor forex pairs
-    "EURJPY" 
-    /*,"EURGBP",  "EURCHF", "EURCAD", "EURAUD", "EURNZD",
+    "EURUSD", "USDJPY", "GBPUSD", "USDCHF", "AUDUSD", "USDCAD", "NZDUSD",
+    "EURJPY", "EURGBP", "EURCHF", "EURCAD", "EURAUD", "EURNZD",
     "GBPJPY", "GBPCHF", "GBPCAD", "GBPAUD", "GBPNZD",
     "AUDCAD", "AUDCHF", "AUDJPY", "AUDNZD",
     "CADCHF", "CADJPY", "CHFJPY",
     "NZDCAD", "NZDCHF", "NZDJPY",
-
-    // Indices, commodities, and crypto
     "AUS200Cash", "BRENTCash", "CA60Cash", "China50Cash", "ChinaHCash", "EU50Cash", "FRA40Cash",
-    "GER40Cash", "HK50Cash", "IT40Cash", "JP225Cash",
-    "NETH25Cash", "NGASCash", "OILCash", "SA40Cash", "SILVER",
-    "SPAIN35Cash", "SWI20Cash", "Sing30Cash", "UK100Cash",
-    "US100Cash", "US2000Cash", "US30Cash", "US500Cash", "GerMid50Cash", "GerTech30Cash", "TaiwanCash",
-
+    "GER40Cash", "HK50Cash", "IT40Cash", "JP225Cash", "NETH25Cash", "NGASCash", "OILCash",
+    "SA40Cash", "SILVER", "SPAIN35Cash", "SWI20Cash", "Sing30Cash", "UK100Cash", "US100Cash",
+    "US2000Cash", "US30Cash", "US500Cash", "GerMid50Cash", "GerTech30Cash", "TaiwanCash",
     "BTCEUR", "BTCGBP", "BTCUSD", "ETHEUR", "ETHGBP", "ETHUSD",
-
-    "GOLD", "XAUUSD", "SILVER", "XAUEUR", "XPDUSD", "XPTUSD"*/
+    "GOLD", "XAUUSD", "SILVER", "XAUEUR", "XPDUSD", "XPTUSD"
 };
 
 int OnInit() {
