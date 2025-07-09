@@ -12,10 +12,11 @@ input ENUM_TIMEFRAMES TimeFrame = PERIOD_H4;
 // List of instruments (symbols) to loop through
 string symbols[] = {
     // Major forex pairs
-    "EURUSD", "USDJPY", "GBPUSD", "USDCHF", "AUDUSD", "USDCAD", "NZDUSD",
+    "EURUSD", "USDJPY", //"GBPUSD", "USDCHF", "AUDUSD", "USDCAD", "NZDUSD",
 
     // Minor forex pairs
-    "EURGBP", "EURJPY", "EURCHF", "EURCAD", "EURAUD", "EURNZD",
+    "EURJPY" 
+    /*,"EURGBP",  "EURCHF", "EURCAD", "EURAUD", "EURNZD",
     "GBPJPY", "GBPCHF", "GBPCAD", "GBPAUD", "GBPNZD",
     "AUDCAD", "AUDCHF", "AUDJPY", "AUDNZD",
     "CADCHF", "CADJPY", "CHFJPY",
@@ -30,7 +31,7 @@ string symbols[] = {
 
     "BTCEUR", "BTCGBP", "BTCUSD", "ETHEUR", "ETHGBP", "ETHUSD",
 
-    "GOLD", "XAUUSD", "SILVER", "XAUEUR", "XPDUSD", "XPTUSD"
+    "GOLD", "XAUUSD", "SILVER", "XAUEUR", "XPDUSD", "XPTUSD"*/
 };
 
 int OnInit() {
