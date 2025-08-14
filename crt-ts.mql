@@ -1,0 +1,106 @@
+
+//+------------------------------------------------------------------+
+//|                                                CRTTS_AutoTF.mq5  |
+//|   Turtle Soup (bar-close only), auto-uses chart TF or input TF    |
+//+------------------------------------------------------------------+
+#property strict
+#property version "1.11"
+
+input ENUM_TIMEFRAMES TimeFrame = PERIOD_CURRENT; // use chart TF by default
+input int   Lookback=20;              // bars 2..(Lookback+1)
+input bool  UseWickFilter=true;       // optional extra filter
+input double WickFactor=3.0;          // wick >= factor * body
+
+string symbols[] = {
+  "EURUSD","USDJPY","GBPUSD","USDCHF","AUDUSD","USDCAD","NZDUSD",
+  "EURJPY","EURGBP","EURCHF","EURCAD","EURAUD","EURNZD",
+  "GBPJPY","GBPCHF","GBPCAD","GBPAUD","GBPNZD",
+  "AUDCAD","AUDCHF","AUDJPY","AUDNZD",
+  "CADCHF","CADJPY","CHFJPY",
+  "NZDCAD","NZDCHF","NZDJPY",
+  "AUS200Cash","BRENTCash","CA60Cash","China50Cash","ChinaHCash","EU50Cash","FRA40Cash",
+  "GER40Cash","HK50Cash","IT40Cash","JP225Cash","NETH25Cash","NGASCash","OILCash",
+  "SA40Cash","SPAIN35Cash","SWI20Cash","Sing30Cash","UK100Cash","US100Cash",
+  "US2000Cash","US30Cash","US500Cash","GerMid50Cash","GerTech30Cash","TaiwanCash",
+  "BTCEUR","BTCGBP","BTCUSD","ETHEUR","ETHGBP","ETHUSD",
+  "GOLD","XAUUSD","XAUEUR","XPDUSD","XPTUSD"
+};
+
+datetime lastBarTime[];
+
+int OnInit(){
+  ArrayResize(lastBarTime,ArraySize(symbols));
+  for(int i=0;i<ArraySize(symbols);i++){
+    SymbolSelect(symbols[i],true);
+    lastBarTime[i]=0;
+  }
+  Print("CRTTS AutoTF initialized.");
+  return(INIT_SUCCEEDED);
+}
+
+void OnTick(){
+  ENUM_TIMEFRAMES tf = (TimeFrame==PERIOD_CURRENT ? (ENUM_TIMEFRAMES)_Period : TimeFrame);
+
+  for(int i=0;i<ArraySize(symbols);i++){
+    string sym = symbols[i];
+    if(Bars(sym,tf) < Lookback+5) continue;
+
+    datetime bar1Time = iTime(sym,tf,1); // just-closed bar on current TF
+    if(bar1Time==0 || bar1Time==lastBarTime[i]) continue; // wait for new close
+    lastBarTime[i]=bar1Time;
+
+    MqlRates r[];
+    if(CopyRates(sym,tf,1,Lookback+5,r) < Lookback+2) continue;
+    // r[0]=bar1 (signal), r[1]=bar2,...
+
+    double o1=r[0].open, c1=r[0].close, h1=r[0].high, l1=r[0].low;
+    double o2=r[1].open, c2=r[1].close, h2=r[1].high, l2=r[1].low;
+
+    bool c1Bull = c1>o1, c1Bear=c1<o1;
+    bool c2Bull = c2>o2, c2Bear=c2<o2;
+    if(!(c1Bull||c1Bear) || !(c2Bull||c2Bear)) continue;
+
+    bool wickOk=true;
+    if(UseWickFilter){
+      double body1 = MathAbs(c1-o1);
+      double lowerW = MathMin(o1,c1)-l1;
+      double upperW = h1-MathMax(o1,c1);
+      bool longLower = lowerW >= WickFactor*body1;
+      bool longUpper = upperW >= WickFactor*body1;
+      wickOk = (c1Bull? longLower : longUpper);
+    }
+
+    double ll=l2, hh=h2;
+    for(int k=1;k<=Lookback;k++){
+      if(r[k].low < ll) ll=r[k].low;
+      if(r[k].high> hh) hh=r[k].high;
+    }
+
+    int digits=(int)SymbolInfoInteger(sym,SYMBOL_DIGITS);
+
+    // Bullish Turtle Soup
+    if(c1Bull && l1 < ll && c1 > ll && wickOk){
+      double entry = iOpen(sym,tf,0); // next bar open on current TF
+      double sl = l1;
+      double tp1 = (ll + h2)/2.0;
+      double tp2 = h2;
+      Alert(sym+" "+EnumToString(tf)+": Bullish Turtle Soup | Entry: "+DoubleToString(entry,digits)
+            +" SL: "+DoubleToString(sl,digits)
+            +" TP1: "+DoubleToString(tp1,digits)
+            +" TP2: "+DoubleToString(tp2,digits));
+    }
+
+    // Bearish Turtle Soup
+    if(c1Bear && h1 > hh && c1 < hh && wickOk){
+      double entry = iOpen(sym,tf,0);
+      double sl = h1;
+      double tp1 = (hh + l2)/2.0;
+      double tp2 = l2;
+      Alert(sym+" "+EnumToString(tf)+": Bearish Turtle Soup | Entry: "+DoubleToString(entry,digits)
+            +" SL: "+DoubleToString(sl,digits)
+            +" TP1: "+DoubleToString(tp1,digits)
+            +" TP2: "+DoubleToString(tp2,digits));
+    }
+  }
+}
+
