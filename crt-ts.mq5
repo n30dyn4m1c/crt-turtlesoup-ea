@@ -1,6 +1,4 @@
-Understood — here’s the same code with the correct filename and header adjusted to match:
 
-```mq5
 //+------------------------------------------------------------------+
 //|                                                       crt-ts.mq5 |
 //|                                                       Neo Malesa |
@@ -104,6 +102,4 @@ void OnTick(){
     }
   }
 }
-```
 
-Do you also want me to integrate an **ATR-based stop-loss buffer** in this crt-ts.mq5 so it’s more robust in volatile markets?
