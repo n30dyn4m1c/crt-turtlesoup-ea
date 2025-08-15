@@ -1,4 +1,3 @@
-
 //+------------------------------------------------------------------+
 //|                                                       crt-ts.mq5 |
 //|                                                       Neo Malesa |
@@ -6,11 +5,11 @@
 //+------------------------------------------------------------------+
 #property copyright "Neo Malesa"
 #property link      "https://www.x.com/n30dyn4m1c"
-#property version   "1.04"
+#property version   "1.07"
 #property strict
 
 input ENUM_TIMEFRAMES TimeFrame = PERIOD_CURRENT;
-input int   Lookback=20;
+input int   Lookback=20;              // kept for data safety; not used in purge test
 input bool  UseWickFilter=true;
 input double WickFactor=3.0;
 
@@ -31,75 +30,85 @@ string symbols[] = {
 
 datetime lastBarTime[];
 
-// ------------ Helpers ------------
+//----------------- Helpers -----------------
 bool WickPass(double o1,double c1,double h1,double l1,bool bull,double factor){
-  double body=MathAbs(c1-o1);
-  if(body<=0) return false;
-  double lower=MathMin(o1,c1)-l1;
-  double upper=h1-MathMax(o1,c1);
+  double body=MathAbs(c1-o1); if(body<=0) return false;
+  double lower=MathMin(o1,c1)-l1, upper=h1-MathMax(o1,c1);
   return bull ? (lower>=factor*body) : (upper>=factor*body);
 }
-
-void Extremes(const MqlRates &r[],int lookback,double &ll,double &hh){
-  ll=r[1].low; hh=r[1].high;
-  for(int k=1;k<=lookback;k++){ if(r[k].low<ll) ll=r[k].low; if(r[k].high>hh) hh=r[k].high; }
+// Signal bar must be strictly below/above 50% of prior bar
+bool MidNotReachedBull(const MqlRates &r[]){
+  double mid=(r[1].high + r[1].low)*0.5;
+  return (r[0].high < mid);
+}
+bool MidNotReachedBear(const MqlRates &r[]){
+  double mid=(r[1].high + r[1].low)*0.5;
+  return (r[0].low > mid);
 }
 
-// ------------ Pattern functions ------------
-bool isBullishTurtleSoup(const MqlRates &r[],int lookback,bool useWick,double wickFactor){
+//----------------- Pattern functions -----------------
+// Bullish TS (TS+1): bar0 purges PRIOR LOW (r[1].low) and closes back above it.
+bool isBullishTurtleSoup(const MqlRates &r[],bool useWick,double wickFactor){
   double o1=r[0].open,c1=r[0].close,h1=r[0].high,l1=r[0].low;
-  bool bull=c1>o1; if(!bull) return false;
-  if(useWick && !WickPass(o1,c1,h1,l1,true,wickFactor)) return false;
-  double ll,hh; Extremes(r,lookback,ll,hh);
-  return (l1<ll && c1>ll);
+  double l2=r[1].low;
+  if(!(c1>o1)) return false;                         // bullish body
+  if(!(l1<l2 && c1>l2)) return false;                // purge prior low, close above it
+  if(useWick && !WickPass(o1,c1,h1,l1,true,wickFactor)) return false; // long lower wick
+  if(!MidNotReachedBull(r)) return false;            // high < 50% of prior range
+  return true;
 }
-
-bool isBearishTurtleSoup(const MqlRates &r[],int lookback,bool useWick,double wickFactor){
+// Bearish TS (TS+1): bar0 purges PRIOR HIGH (r[1].high) and closes back below it.
+bool isBearishTurtleSoup(const MqlRates &r[],bool useWick,double wickFactor){
   double o1=r[0].open,c1=r[0].close,h1=r[0].high,l1=r[0].low;
-  bool bear=c1<o1; if(!bear) return false;
-  if(useWick && !WickPass(o1,c1,h1,l1,false,wickFactor)) return false;
-  double ll,hh; Extremes(r,lookback,ll,hh);
-  return (h1>hh && c1<hh);
+  double h2=r[1].high;
+  if(!(c1<o1)) return false;                         // bearish body
+  if(!(h1>h2 && c1<h2)) return false;                // purge prior high, close below it
+  if(useWick && !WickPass(o1,c1,h1,l1,false,wickFactor)) return false; // long upper wick
+  if(!MidNotReachedBear(r)) return false;            // low > 50% of prior range
+  return true;
 }
 
-// ------------ EA ------------
-int OnInit(){
-  ArrayResize(lastBarTime,ArraySize(symbols));
-  for(int i=0;i<ArraySize(symbols);i++){ SymbolSelect(symbols[i],true); lastBarTime[i]=0; }
-  return(INIT_SUCCEEDED);
-}
+//----------------- Core check -----------------
+void CheckSymbol(const int idx,ENUM_TIMEFRAMES tf){
+  string sym=symbols[idx];
+  if(Bars(sym,tf) < 50) return;                      // data safety
 
-void OnTick(){
-  ENUM_TIMEFRAMES tf=(TimeFrame==PERIOD_CURRENT?(ENUM_TIMEFRAMES)_Period:TimeFrame);
+  datetime t=iTime(sym,tf,1);                        // closed bar only
+  if(t==0 || t==lastBarTime[idx]) return;
+  lastBarTime[idx]=t;
 
-  for(int i=0;i<ArraySize(symbols);i++){
-    string sym=symbols[i];
-    if(Bars(sym,tf)<Lookback+5) continue;
+  MqlRates rr[];
+  if(CopyRates(sym,tf,1,Lookback+5,rr) < 2) return;  // need bar0 & bar1 at least
 
-    datetime t=iTime(sym,tf,1);
-    if(t==0 || t==lastBarTime[i]) continue;
-    lastBarTime[i]=t;
+  int digits=(int)SymbolInfoInteger(sym,SYMBOL_DIGITS);
+  double h2=rr[1].high, l2=rr[1].low;
 
-    MqlRates r[];
-    if(CopyRates(sym,tf,1,Lookback+5,r)<Lookback+2) continue;
-
-    int digits=(int)SymbolInfoInteger(sym,SYMBOL_DIGITS);
-    double h2=r[1].high,l2=r[1].low;
-
-    if(isBullishTurtleSoup(r,Lookback,UseWickFilter,WickFactor)){
-      double entry=iOpen(sym,tf,0), sl=r[0].low, tp1=(l2+h2)/2.0, tp2=h2;
-      Alert(sym+" "+EnumToString(tf)+": Bullish Turtle Soup | Entry "+DoubleToString(entry,digits)
-            +" SL "+DoubleToString(sl,digits)
-            +" TP1 "+DoubleToString(tp1,digits)
-            +" TP2 "+DoubleToString(tp2,digits));
-    }
-    if(isBearishTurtleSoup(r,Lookback,UseWickFilter,WickFactor)){
-      double entry=iOpen(sym,tf,0), sl=r[0].high, tp1=(h2+l2)/2.0, tp2=l2;
-      Alert(sym+" "+EnumToString(tf)+": Bearish Turtle Soup | Entry "+DoubleToString(entry,digits)
-            +" SL "+DoubleToString(sl,digits)
-            +" TP1 "+DoubleToString(tp1,digits)
-            +" TP2 "+DoubleToString(tp2,digits));
-    }
+  if(isBullishTurtleSoup(rr,UseWickFilter,WickFactor)){
+    double entry=iOpen(sym,tf,0), sl=rr[0].low, tp1=(l2+h2)*0.5, tp2=h2;
+    Alert(sym+" "+EnumToString(tf)+": Bullish Turtle Soup | Entry "+DoubleToString(entry,digits)
+          +" SL "+DoubleToString(sl,digits)
+          +" TP1 "+DoubleToString(tp1,digits)
+          +" TP2 "+DoubleToString(tp2,digits));
+  }
+  if(isBearishTurtleSoup(rr,UseWickFilter,WickFactor)){
+    double entry=iOpen(sym,tf,0), sl=rr[0].high, tp1=(h2+l2)*0.5, tp2=l2;
+    Alert(sym+" "+EnumToString(tf)+": Bearish Turtle Soup | Entry "+DoubleToString(entry,digits)
+          +" SL "+DoubleToString(sl,digits)
+          +" TP1 "+DoubleToString(tp1,digits)
+          +" TP2 "+DoubleToString(tp2,digits));
   }
 }
 
+//----------------- EA lifecycle -----------------
+int OnInit(){
+  ArrayResize(lastBarTime,ArraySize(symbols));
+  for(int i=0;i<ArraySize(symbols);i++){ SymbolSelect(symbols[i],true); lastBarTime[i]=0; }
+  EventSetTimer(2);                                  // run post-close only
+  return(INIT_SUCCEEDED);
+}
+void OnDeinit(const int reason){ EventKillTimer(); }
+void OnTimer(){
+  ENUM_TIMEFRAMES tf=(TimeFrame==PERIOD_CURRENT?(ENUM_TIMEFRAMES)_Period:TimeFrame);
+  for(int i=0;i<ArraySize(symbols);i++) CheckSymbol(i,tf);
+}
+void OnTick(){} // avoid mid-bar checks
